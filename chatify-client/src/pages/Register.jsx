@@ -13,44 +13,52 @@ export default function Register() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
+  
+    // 🔔 TEST: ser du den här? Då körs klicket.
+    alert("Startar registrering…");
+  
     try {
-      // 1) Hämta CSRF-token från servern
-      const { data } = await api.patch("/csrf");
-      const csrf = data?.csrfToken; // engångsnyckeln
-    
-
-
-      // 2) Skicka registreringen + CSRF i headers
-      const res = await api.post(
-        "/auth/register",
-        { username, email, password, avatar },
-        {
-          headers: {
-            "X-CSRF-Token": csrf,
-            "X-XSRF-TOKEN": csrf,
-          },
-        }
-      );
-
+      console.log("[REGISTER] baseURL =", api.defaults.baseURL);
+      console.log("[REGISTER] withCredentials =", api.defaults.withCredentials);
+  
+      // 1) CSRF (sätter cookie)
+      console.log("[REGISTER] PATCH /csrf");
+      await api.patch("/csrf");
+  
+      // 2) POST /auth/register (utan egna headers)
+      console.log("[REGISTER] POST /auth/register", { username, email, password, avatar });
+      const res = await api.post("/auth/register", {
+        username,
+        email,
+        password,
+        avatar,
+      });
+  
+      console.log("[REGISTER] RESPONSE", res.status, res.data);
       alert("Registrering lyckades! 🎉");
-      console.log("REGISTER OK:", res.data);
-      navigate("/login"); // gå till Login efter lyckad registrering
+      navigate("/login");
     } catch (err) {
-      const status = err?.response?.status;
-      const data = err?.response?.data;
-
-      console.error("REGISTER ERROR status:", status);
-      console.error("REGISTER ERROR data:", data);
-
-      const msg =
-        (data && (data.message || data.error || JSON.stringify(data))) ||
-        "Något gick fel vid registrering.";
-
-      alert(`Registrering misslyckades.\nStatus: ${status ?? "okänd"}\nMeddelande: ${msg}`);
+      // Visa MAX info för att vi ska se exakt vad som händer
+      const status   = err?.response?.status;
+      const data     = err?.response?.data;
+      const message  = err?.message;
+      const toString = String(err);
+  
+      console.error("[REGISTER] ERROR raw:", err);
+      console.log("[REGISTER] ERROR status:", status);
+      console.log("[REGISTER] ERROR data:", data);
+      console.log("[REGISTER] ERROR message:", message);
+      console.log("[REGISTER] ERROR string:", toString);
+  
+      alert(
+        `Registrering misslyckades.\n` +
+        `status: ${status ?? "—"}\n` +
+        `message: ${message ?? "—"}\n` +
+        `data: ${data ? JSON.stringify(data) : "—"}`
+      );
     }
   }
-
+  
   return (
     <div style={{ padding: 16, maxWidth: 420, margin: "0 auto" }}>
       <h1>Registrera</h1>
