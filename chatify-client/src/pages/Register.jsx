@@ -1,39 +1,56 @@
 import { useState } from "react";
 import { api } from "../api";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Register() {
   // Minneslappar för varje fält
   const [username, setUsername] = useState("");
   const [email, setEmail]       = useState("");
-  const [password, setPassword] = useState(""); // <-- viktig rad vi saknade
+  const [password, setPassword] = useState("");
   const [avatar, setAvatar]     = useState("");
+
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
-  
+
     try {
-      // 1) Hämta CSRF-nyckeln (måste göras före register)
-      await api.patch("/csrf");
-  
-      // 2) Skicka registrering till backend
-      const res = await api.post("/auth/register", {
-        username,
-        email,
-        password,
-        avatar, // kan vara tom sträng, det går bra
-      });
-  
-      // 3) Lyckades: visa bekräftelse (vi gör redirect i nästa steg)
+      // 1) Hämta CSRF-token från servern
+      const { data } = await api.patch("/csrf");
+      const csrf = data?.csrfToken; // engångsnyckeln
+    
+
+
+      // 2) Skicka registreringen + CSRF i headers
+      const res = await api.post(
+        "/auth/register",
+        { username, email, password, avatar },
+        {
+          headers: {
+            "X-CSRF-Token": csrf,
+            "X-XSRF-TOKEN": csrf,
+          },
+        }
+      );
+
       alert("Registrering lyckades! 🎉");
       console.log("REGISTER OK:", res.data);
+      navigate("/login"); // gå till Login efter lyckad registrering
     } catch (err) {
-      // 4) Misslyckades: visa fel från API:t (t.ex. "Username or email already exists")
-      const msg = err?.response?.data?.message || "Något gick fel vid registrering.";
-      alert(msg);
-      console.error("REGISTER ERROR:", err);
+      const status = err?.response?.status;
+      const data = err?.response?.data;
+
+      console.error("REGISTER ERROR status:", status);
+      console.error("REGISTER ERROR data:", data);
+
+      const msg =
+        (data && (data.message || data.error || JSON.stringify(data))) ||
+        "Något gick fel vid registrering.";
+
+      alert(`Registrering misslyckades.\nStatus: ${status ?? "okänd"}\nMeddelande: ${msg}`);
     }
   }
-  
+
   return (
     <div style={{ padding: 16, maxWidth: 420, margin: "0 auto" }}>
       <h1>Registrera</h1>
@@ -85,6 +102,10 @@ export default function Register() {
 
         <button type="submit">Registrera</button>
       </form>
+
+      <p style={{ marginTop: 12 }}>
+        Har du redan konto? <Link to="/login">Gå till Login</Link>
+      </p>
     </div>
   );
 }
