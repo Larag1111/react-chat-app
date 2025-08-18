@@ -14,48 +14,19 @@ export default function Register() {
   async function handleSubmit(e) {
     e.preventDefault();
   
-    // 🔔 TEST: ser du den här? Då körs klicket.
-    alert("Startar registrering…");
-  
     try {
-      console.log("[REGISTER] baseURL =", api.defaults.baseURL);
-      console.log("[REGISTER] withCredentials =", api.defaults.withCredentials);
-  
-      // 1) CSRF (sätter cookie)
-      console.log("[REGISTER] PATCH /csrf");
+      // 1) Hämta CSRF
       await api.patch("/csrf");
   
-      // 2) POST /auth/register (utan egna headers)
-      console.log("[REGISTER] POST /auth/register", { username, email, password, avatar });
-      const res = await api.post("/auth/register", {
-        username,
-        email,
-        password,
-        avatar,
-      });
+      // 2) VISA alla cookies som finns just nu
+      alert("Cookies just nu:\n" + document.cookie);
+      console.log("COOKIES:", document.cookie);
   
-      console.log("[REGISTER] RESPONSE", res.status, res.data);
-      alert("Registrering lyckades! 🎉");
-      navigate("/login");
+      // 3) STOPPA HÄR (vi testar bara cookies nu)
+      return;
     } catch (err) {
-      // Visa MAX info för att vi ska se exakt vad som händer
-      const status   = err?.response?.status;
-      const data     = err?.response?.data;
-      const message  = err?.message;
-      const toString = String(err);
-  
-      console.error("[REGISTER] ERROR raw:", err);
-      console.log("[REGISTER] ERROR status:", status);
-      console.log("[REGISTER] ERROR data:", data);
-      console.log("[REGISTER] ERROR message:", message);
-      console.log("[REGISTER] ERROR string:", toString);
-  
-      alert(
-        `Registrering misslyckades.\n` +
-        `status: ${status ?? "—"}\n` +
-        `message: ${message ?? "—"}\n` +
-        `data: ${data ? JSON.stringify(data) : "—"}`
-      );
+      console.error("CSRF ERROR:", err);
+      alert("Kunde inte hämta CSRF. Kolla Console.");
     }
   }
   
