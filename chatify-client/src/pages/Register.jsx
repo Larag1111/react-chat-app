@@ -15,20 +15,40 @@ export default function Register() {
     e.preventDefault();
   
     try {
-      // 1) Hämta CSRF
-      await api.patch("/csrf");
+      // 1) hämta CSRF (servern sätter cookie). viktigt: credentials: "include"
+      const csrfRes = await fetch("https://chatify-api.up.railway.app/csrf", {
+        method: "PATCH",
+        credentials: "include",
+      });
+      if (!csrfRes.ok) {
+        alert("Kunde inte hämta CSRF (" + csrfRes.status + ")");
+        return;
+      }
   
-      // 2) VISA alla cookies som finns just nu
-      alert("Cookies just nu:\n" + document.cookie);
-      console.log("COOKIES:", document.cookie);
+      // 2) skicka registrering (ingen egen CSRF-header; låt cookien göra jobbet)
+      const regRes = await fetch("https://chatify-api.up.railway.app/auth/register", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password, avatar }),
+      });
   
-      // 3) STOPPA HÄR (vi testar bara cookies nu)
-      return;
+      // 3) hantera svar
+      if (!regRes.ok) {
+        const errBody = await regRes.json().catch(() => ({}));
+        const msg = errBody.message || errBody.error || "Något gick fel vid registrering.";
+        alert(`Registrering misslyckades.\nStatus: ${regRes.status}\nMeddelande: ${msg}`);
+        return;
+      }
+  
+      alert("Registrering lyckades! 🎉");
+      navigate("/login");
     } catch (err) {
-      console.error("CSRF ERROR:", err);
-      alert("Kunde inte hämta CSRF. Kolla Console.");
+      console.error("REGISTER fetch error:", err);
+      alert("Nätverksfel vid registrering. Kolla Console.");
     }
   }
+  
   
   return (
     <div style={{ padding: 16, maxWidth: 420, margin: "0 auto" }}>
