@@ -1,6 +1,6 @@
 import axios from "axios";
 
 export const api = axios.create({
-    baseURL: "https://chatify-api.up.railway.app",
-    withCredentials: true,
+  baseURL: "/api",        // <-- använd Netlify-proxy
+  withCredentials: true,  // skicka/ta emot cookies
 });
