@@ -1,85 +1,85 @@
+// src/pages/Login.jsx
 import { useState } from "react";
-import { api } from "../api";
+import { loginUser } from "../utils/Auth";
 import { jwtDecode } from "jwt-decode";
+import { Link } from "react-router-dom";
 
 export default function Login() {
-  // små minneslappar för inmatning
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError]       = useState("");
 
   async function handleSubmit(e) {
-    e.preventDefault(); // stanna på sidan
-  
+    e.preventDefault();
+    setError("");
+
     try {
-      // 1) hämta säkerhetsnyckeln (CSRF)
-      await api.patch("/csrf");
-  
-      // 2) skicka inloggningen till servern
-      const res = await api.post("/auth/token", {
-        username,
-        password,
-      });
-  
-      // 3) plocka ut token ur svaret
-      const token = res?.data?.token;
+      // 1) Skicka login
+      const data = await loginUser({ username, password });
+
+      // 2) Hämta token
+      const token = data?.token;
       if (!token) {
-        alert("Servern skickade ingen token. Kolla Console.");
-        console.log("LOGIN response (utan token):", res.data);
+        alert("Servern skickade ingen token. Kolla konsolen.");
+        console.log("Login data utan token:", data);
         return;
       }
-  
-      // 4) läs token (öppna “brevet”) för att få ut id/username/avatar
-      const decoded = jwtDecode(token); // kräver: import { jwtDecode } from "jwt-decode";
-  
-      // 5) spara token + användare i localStorage (så vi är inloggade efter reload)
-      localStorage.setItem(
-        "auth",
-        JSON.stringify({
-          token,
-          user: {
-            id: decoded.id,
-            username: decoded.username,
-            avatar: decoded.avatar, // kan vara undefined om ingen avatar sattes
-          },
-        })
-      );
-  
-      alert("Inloggning sparad! ✅ (token + användare i localStorage)");
+
+      // 3) Decoda token → spara användare
+      let decoded = {};
+      try { decoded = jwtDecode(token); } catch { decoded = {}; }
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify({
+        id: decoded.id,
+        username: decoded.username || username,
+        avatar: decoded.avatar,
+        email: decoded.email,
+      }));
+
+      alert("Inloggning lyckades! ✅");
+
+      // 4) Stabil redirect: full sidladdning så App.jsx läser token
+      window.location.href = "/chat";
     } catch (err) {
-      const msg = err?.response?.data?.message || "Fel vid inloggning.";
-      alert(msg); // t.ex. "Invalid credentials"
       console.error("LOGIN ERROR:", err);
+      const msg = err?.message || "Fel vid inloggning.";
+      setError(msg);
+      alert(msg);
     }
   }
-  
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{ padding: 16, maxWidth: 420, margin: "0 auto" }}
-    >
-      <h1>Login</h1>
+    <div className="container">
+      <h1>Logga in</h1>
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="field">
+          <label>Användarnamn</label>
+          <input
+            placeholder="t.ex. lara123"
+            value={username}
+            onChange={(e)=>setUsername(e.target.value)}
+            required
+          />
+        </div>
+        <div className="field">
+          <label>Lösenord</label>
+          <input
+            type="password"
+            placeholder="••••••"
+            value={password}
+            onChange={(e)=>setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit">Logga in</button>
+      </form>
 
-      <label>
-        Användarnamn
-        <input
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-      </label>
+      {error && <p className="error" style={{marginTop:8}}>{error}</p>}
 
-      <label>
-        Lösenord
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </label>
-
-      <button type="submit">Logga in</button>
-    </form>
+      <p style={{ marginTop: 12 }}>
+        Saknar du konto? <Link to="/register">Registrera här</Link>
+      </p>
+    </div>
   );
 }

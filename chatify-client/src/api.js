@@ -1,6 +1,7 @@
+// src/api.js
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "/api",        // <-- använd Netlify-proxy
-  withCredentials: true,  // skicka/ta emot cookies
+  baseURL: import.meta.env.VITE_API_URL || "/api",
+  withCredentials: true,        // låt cookies följa med
 });
