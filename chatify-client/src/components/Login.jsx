@@ -22,21 +22,42 @@ export default function Login() {
 
   return (
     <div className="container">
-      <h1>Logga in</h1>
-      <form className="form" onSubmit={handleSubmit}>
-        <div className="field">
-          <label>Användarnamn</label>
-          <input value={username} onChange={(e) => setUsername(e.target.value)} required />
-        </div>
-        <div className="field">
-          <label>Lösenord</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        </div>
-        <button type="submit">Logga in</button>
-      </form>
-      <button className="link" onClick={() => navigate("/register")}>
-        Har du inget konto? Registrera dig här.
-      </button>
-    </div>
-  );
+    <h1>Logga in</h1>
+    <form className="form" onSubmit={handleSubmit}>
+      <div className="field">
+        <label>Användarnamn</label>
+        <input
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+      </div>
+
+      <div className="field">
+        <label>Lösenord</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
+
+     
+      <div className="actions">
+        <button
+          type="button"
+          className="btn btn-register"
+          onClick={() => navigate("/register")}
+        >
+          Registrera dig
+        </button>
+
+        <button type="submit" className="btn btn-login">
+          Logga in
+        </button>
+      </div>
+    </form>
+  </div>
+);
 }
