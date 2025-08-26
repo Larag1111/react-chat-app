@@ -9,6 +9,7 @@ export async function fetchCsrfToken() {
     headers: { "Content-Type": "application/json" },
   });
   const data = await res.json().catch(() => ({}));
+  
   console.log("CSRF-respons:", res.status, data);
   if (!res.ok) {
     const msg = data?.message || data?.error || `Kunde inte hämta CSRF-token (status ${res.status})`;
@@ -16,6 +17,9 @@ export async function fetchCsrfToken() {
   }
   const csrf = data?.csrfToken;
   if (!csrf) throw new Error("Servern skickade ingen csrfToken");
+  
+  // Lagra CSRF-token i sessionStorage
+  sessionStorage.setItem("csrfToken", csrf);
   return csrf;
 }
 
@@ -31,6 +35,12 @@ export async function registerUser({ username, email, password, avatar }) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     throw new Error(data?.message || data?.error || `Registrering misslyckades (status ${res.status})`);
+  }
+  
+  // Lagra CSRF-token och JWT i sessionStorage
+  sessionStorage.setItem("csrfToken", token);
+  if (data?.token) {
+    sessionStorage.setItem("jwtToken", data.token);
   }
   return data;
 }
@@ -51,5 +61,24 @@ export async function loginUser({ username, password }) {
   if (!res.ok) {
     throw new Error(data?.message || data?.error || `Inloggning misslyckades (status ${res.status})`);
   }
+
+  // Lagra CSRF-token och JWT i sessionStorage
+  sessionStorage.setItem("csrfToken", token);
+  if (data?.token) {
+    sessionStorage.setItem("jwtToken", data.token);
+  }
   return data; // förväntas vara { token: "..." }
+}
+
+// 4) Logga ut
+export function logoutUser() {
+  // Ta bort CSRF-token och JWT-token från sessionStorage
+  sessionStorage.removeItem("csrfToken");
+  sessionStorage.removeItem("jwtToken");
+
+  // Ta bort CSRF-token och JWT-token från localStorage (om de finns)
+  localStorage.removeItem("csrfToken");
+  localStorage.removeItem("jwtToken");
+
+  console.log("Användaren har loggats ut och alla tokens har tagits bort.");
 }

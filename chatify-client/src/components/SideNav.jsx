@@ -1,17 +1,22 @@
 import { Link, useNavigate } from "react-router-dom";
+import { logoutUser } from "../services.js";
 
 export default function SideNav() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+
+  // Kontrollera om användaren är inloggad
+  const isLoggedIn = !!sessionStorage.getItem("jwtToken");
+  const user = (() => {
+    try {
+      return JSON.parse(sessionStorage.getItem("user") || "{}");
+    } catch {
+      return {};
+    }
+  })();
 
   function handleLogout() {
-    try {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-    } finally {
-      // full reload så inget försöker hämta /messages efter logout
-      window.location.href = "/login";
-    }
+    logoutUser(); // Rensa tokens
+    navigate("/login"); // Navigera till login-sidan
   }
 
   return (
@@ -30,7 +35,7 @@ export default function SideNav() {
     >
       <nav>
         <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 8 }}>
-          {!token && (
+          {!isLoggedIn && (
             <>
               <li>
                 <Link to="/login">Logga in</Link>
@@ -41,7 +46,7 @@ export default function SideNav() {
             </>
           )}
 
-          {token && (
+          {isLoggedIn && (
             <>
               <li>
                 <Link to="/chat">Chat</Link>

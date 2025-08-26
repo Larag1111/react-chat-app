@@ -1,63 +1,79 @@
-:root{
-  --bg:#0f1222;
-  --panel:#171a2d;
-  --muted:#9aa4bf;
-  --text:#e9eeff;
-  --primary:#3b82f6;
-  --primary-2:#2563eb;
-  --danger:#ef4444;
-  --green:#86efac;
-  --bubble-me:#d1fae5;
-  --bubble-other:#e5e7eb;
+/* Chatbubblor */
+.chat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 12px 0 20px;
 }
-*{box-sizing:border-box}
-html,body,#root{height:100%}
-body{
-  margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
-  background:var(--bg); color:var(--text);
+
+.chat-item {
+  max-width: 70%;
+  background: var(--bubble-other); /* Grå bakgrund för botens meddelanden */
+  color: #111827;
+  padding: 10px 12px;
+  border-radius: 14px;
+  position: relative;
+  margin-right: auto; /* Placera botens meddelanden till vänster */
 }
-a{color:#9db8ff; text-decoration:none}
-a:hover{text-decoration:underline}
-.container{max-width:900px; margin:32px auto; padding:0 16px}
-h1,h2{margin:0 0 14px; letter-spacing:.3px}
 
-/* header */
-.userinfo{display:flex; align-items:center; justify-content:space-between; padding:18px 16px; background:var(--panel); position:sticky; top:0; z-index:40}
-.userinfo .brand{font-size:28px; font-weight:800}
-.userinfo .badge{display:flex; align-items:center; gap:10px}
-.userinfo .badge img{width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.2)}
-.muted{color:var(--muted)}
-
-/* nav */
-.topnav{display:flex; gap:20px; padding:10px 16px; background:transparent; margin:8px 0 16px}
-
-/* forms */
-.form{display:grid; gap:14px; max-width:420px}
-.field{display:grid; gap:6px}
-label{font-size:14px; color:var(--muted)}
-input{background:#0e1120; border:1px solid #2a2f45; color:var(--text); padding:10px 12px; border-radius:10px; outline:none}
-input:focus{border-color:#4f5bd5}
-
-button, .btn{
-  background:var(--primary); border:none; color:white; padding:10px 16px; border-radius:12px;
-  cursor:pointer; font-weight:600; letter-spacing:.2px;
+.chat-item.me {
+  margin-left: auto; /* Placera användarens meddelanden till höger */
+  background: var(--bubble-me); /* Grön bakgrund för användarens meddelanden */
 }
-button:hover{background:var(--primary-2)}
-.link{background:transparent; color:#9db8ff; border:none; cursor:pointer}
-.link.danger{color:var(--danger)}
 
-/* avatar picker */
-.avatar-grid{display:flex; gap:12px; flex-wrap:wrap}
-.avatar-grid img{width:56px;height:56px;border-radius:50%;cursor:pointer;border:2px solid transparent;background:#0e1120}
-.avatar-grid img.selected{border-color:#9db8ff}
+.chat-item .meta {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-bottom: 4px;
+}
 
-/* chat */
-.chat-list{display:flex; flex-direction:column; gap:12px; margin:12px 0 20px}
-.chat-item{max-width:70%; background:var(--bubble-other); color:#111827; padding:10px 12px; border-radius:14px; position:relative}
-.chat-item .meta{font-size:12px; opacity:.7; margin-bottom:4px}
-.chat-item.me{margin-left:auto; background:var(--bubble-me)}
-.chat-form{display:flex; gap:10px; max-width:520px}
-.chat-form input{flex:1}
-.error{color:var(--danger); margin-top:8px}
+.chat-item img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 8px;
+}
 
-.card{background:var(--panel); border:1px solid #242947; border-radius:16px; padding:16px; text-align:center}
+/* Chat-form */
+.chat-form {
+  display: flex;
+  gap: 10px;
+  max-width: 520px;
+}
+
+.chat-form input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #2a2f45;
+  border-radius: 10px;
+  background: #0e1120;
+  color: var(--text);
+}
+
+.chat-form button {
+  background: var(--primary);
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.chat-form button:hover {
+  background: var(--primary-2);
+}
+
+/* Error styling */
+.error {
+  color: var(--danger);
+  margin-top: 8px;
+}
+
+/* Fix för vit ruta */
+.chat-item {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Lägg till skugga för att separera meddelanden */
+  overflow: hidden; /* Förhindra att vit ruta visas */
+}
