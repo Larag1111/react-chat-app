@@ -7,6 +7,7 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState("");
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const avatars = [
@@ -19,14 +20,30 @@ export default function Register() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setError(null);
+
+    // Klientvalidering
+    if (!username.trim() || username.length < 3) {
+      setError("Användarnamnet måste vara minst 3 tecken långt.");
+      return;
+    }
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Ange en giltig e-postadress.");
+      return;
+    }
+    if (!password.trim() || password.length < 6) {
+      setError("Lösenordet måste vara minst 6 tecken långt.");
+      return;
+    }
+
     try {
-      const userData = await registerUser({ username, email, password, avatar });
-      sessionStorage.setItem("avatar", avatar); // Lagra avatarens URL i sessionStorage
+      await registerUser({ username, email, password, avatar });
+      sessionStorage.setItem("avatar", avatar);
       alert("Registrering lyckades! Du kan nu logga in.");
       navigate("/login");
-    } catch (error) {
-      console.error("Fel vid registrering:", error);
-      alert(error.message || "Registrering misslyckades.");
+    } catch (err) {
+      console.error("Fel vid registrering:", err);
+      setError(err.message || "Registrering misslyckades.");
     }
   }
 
@@ -36,15 +53,29 @@ export default function Register() {
       <form className="form" onSubmit={handleSubmit}>
         <div className="field">
           <label>Användarnamn</label>
-          <input value={username} onChange={(e) => setUsername(e.target.value)} required />
+          <input
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
         </div>
         <div className="field">
           <label>Email</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
         <div className="field">
           <label>Lösenord</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </div>
         <div className="field">
           <label>Välj en avatar</label>
@@ -68,6 +99,7 @@ export default function Register() {
           </div>
         </div>
         <button type="submit">Registrera</button>
+        {error && <p className="error">{error}</p>}
       </form>
       <button className="link" onClick={() => navigate("/login")}>
         Har du redan ett konto? Logga in här.

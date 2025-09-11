@@ -11,7 +11,7 @@ async function handleError(res, defaultMessage) {
   } catch {
     errMessage = defaultMessage;
   }
-  console.error(`${errMessage}`, res.statusText);
+  console.error(errMessage, res.statusText);
   throw new Error(errMessage);
 }
 
@@ -21,7 +21,7 @@ async function handleSuccess(res, successMessage) {
   return await res.json();
 }
 
-// GENERAR CSRF-TOKEN OCH LAGRAR I sessionStorage
+// GENERAR CSRF-TOKEN OCH LAGRAR I SESSIONSTORAGE
 export async function generateCsrf() {
   const res = await fetch(`${API_URL}/csrf`, {
     method: "PATCH",
@@ -47,11 +47,16 @@ export async function registerUser({ username, password, email, avatar }) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
-    body: JSON.stringify({ username, password, email, avatar, csrfToken }),
+    body: JSON.stringify({
+      username: username.trim(),
+      password: password.trim(),
+      email: email.trim(),
+      avatar: avatar || null,
+      csrfToken, // Skicka CSRF-token
+    }),
   });
   if (res.ok) {
-    const data = await handleSuccess(res, "Registration successful, redirecting to login...");
-    return data;
+    return await handleSuccess(res, "Registration successful");
   }
   await handleError(res, "Registration failed. Please check your input.");
 }
@@ -66,14 +71,13 @@ export async function loginUser({ username, password }) {
     body: JSON.stringify({ username, password, csrfToken }),
   });
   if (res.ok) {
-    const data = await handleSuccess(res, "Login successful, redirecting to chat...");
+    const data = await handleSuccess(res, "Login successful");
     if (data?.token) {
       sessionStorage.setItem("jwtToken", data.token);
       return data.token;
-    } else {
-      console.warn("No JWT-token received in login response.");
-      return null;
     }
+    console.warn("No JWT-token received in login response.");
+    return null;
   }
   await handleError(res, "Login failed. Please check your username and password.");
 }
