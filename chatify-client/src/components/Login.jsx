@@ -30,7 +30,7 @@ export default function Login() {
 
   return (
     <div className="container">
-      <h1>Logga in</h1>
+      <h1 className="auth-title">Logga in</h1>
       <form className="form" onSubmit={handleSubmit}>
         <div className="field">
           <label>Användarnamn</label>

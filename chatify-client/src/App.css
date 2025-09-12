@@ -1,299 +1,313 @@
-/* ===============  FÄRDIG APP.CSS  =============== */
+/* ===== MODERN DARK KUROMI — PRO ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;800;900&display=swap');
 
-/* Färger & grund */
+/* Palett (mörk bas, eleganta accenter) */
 :root{
-  --ink: #1f2937;            /* mörk text */
-  --muted:#64748b;           /* sekundär text */
-  --bg1:  #fdf2f8;           /* rosa-100 */
-  --bg2:  #e9d5ff;           /* lila-200 */
-  --bg3:  #dbeafe;           /* blå-100 */
-  --card:#ffffff;            /* vit kortbakgrund */
-  --ring:#c4b5fd;            /* lila ringar */
-  --btn1:#f472b6;            /* rosa btn */
-  --btn2:#a78bfa;            /* lila btn */
-  --btnH:#8b5cf6;            /* hover */
-  --line: rgba(0,0,0,.06);   /* tunna borders */
+  --bg:#0b0c10;           /* huvudbakgrund (nästan svart) */
+  --panel:#12131a;        /* mörk yta (cards) */
+  --panel-2:#161824;      /* lite ljusare panel */
+  --ink:#e9eaf1;          /* primär text (ljus) */
+  --muted:#a6a9b7;        /* sekundär text */
+  --line:#232536;         /* diskret kant på mörkt */
+  --line-soft:#1b1d2a;
+
+  --pink:#ff4da6;         /* Kuromi-rosa (accent) */
+  --pink-600:#e04392;
+  --violet:#8a7cff;       /* lila touch */
+  --blue:#68a8ff;         /* liten blå ton */
+
+  --r-lg:16px;
+  --r-md:12px;
+  --r-sm:10px;
+
+  --shadow: 0 10px 28px rgba(0,0,0,.35);
+  --shadow-soft: 0 8px 20px rgba(0,0,0,.28);
 }
 
-*{ box-sizing: border-box; }
-html,body,#root{ height:100%; }
-
+/* Bas */
+*{ box-sizing:border-box }
+html,body,#root{ height:100% }
 body{
   margin:0;
-  color:var(--ink);
   background:
-    radial-gradient(1200px 700px at -10% -10%, var(--bg2) 0%, transparent 60%),
-    radial-gradient(900px 600px  at 110% 10%, var(--bg3) 0%, transparent 60%),
-    radial-gradient(900px 700px  at 50% 120%, var(--bg1) 0%, transparent 60%),
-    #fafafa;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    radial-gradient(900px 600px at 120% -10%, rgba(138,124,255,.12) 0%, transparent 60%),
+    radial-gradient(800px 480px at -10% -20%, rgba(255,77,166,.10) 0%, transparent 60%),
+    linear-gradient(180deg, var(--bg), #090a0f 60%, #080910 100%);
+  color: var(--ink);
+  font: 15px/1.55 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
 }
 
-/* Wrapper */
-.app{ max-width: 980px; margin: 0 auto; padding: 24px 18px 56px; }
+.app{ max-width: 980px; margin: 0 auto; padding: 24px 18px 64px }
 
-/* Header / Brand */
+/* ===== Header ===== */
 header{
   display:flex; align-items:center; gap:14px;
-  background: rgba(255,255,255,.85);
-  backdrop-filter: blur(6px);
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
   border:1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--r-lg);
   padding: 14px 16px;
-  box-shadow: 0 10px 25px rgba(31,41,55,.08);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
 }
 .brand{
-  font-weight: 900;
-  letter-spacing:.3px;
-  font-size: clamp(26px,3.8vw,40px);
-  background: linear-gradient(90deg, var(--btn2), #60a5fa);
-  -webkit-background-clip: text; background-clip:text;
-  color: transparent;
+  font-family: Poppins, Inter, system-ui, sans-serif;
+  font-weight: 900; letter-spacing:.08em;
+  font-size: clamp(28px,3.6vw,42px);
+  color: #fff;
 }
-header .right{ margin-left:auto; display:flex; align-items:center; gap:12px; }
+.brand strong{ color: var(--pink) } /* valfritt: <span>GOMO<strong>KU</strong></span> */
+header .right{ margin-left:auto; display:flex; gap:12px; align-items:center }
 
-/* Nav */
-nav{
-  display:flex; gap:16px; align-items:center;
-  margin: 14px 2px 22px;
-}
+/* ===== Nav ===== */
+nav{ display:flex; gap:16px; align-items:center; margin: 14px 2px 22px }
 nav a{
-  color:#2563eb;
-  text-decoration: none;
-  font-weight: 700;
+  color: var(--violet); text-decoration:none; font-weight:700;
+  border-bottom: 2px solid transparent; padding-bottom:2px;
 }
-nav a:hover{ color:#7c3aed; }
+nav a:hover{ color: var(--pink); border-color: var(--pink) }
 
-/* Kort / sektion */
+/* ===== Cards/Containers ===== */
 .container{
-  background: var(--card);
+  background: linear-gradient(180deg, var(--panel), #141622);
+  color: var(--ink);
   border:1px solid var(--line);
-  border-radius: 16px;
-  padding: 22px;
-  max-width: 760px;
-  margin: 0 auto;
+  border-radius: var(--r-lg);
+  padding: 24px;
+  max-width: 760px; margin: 0 auto;
+  box-shadow: var(--shadow-soft);
 }
 
-/* Rubriker */
-h1{ font-size: clamp(26px,3.5vw,38px); margin: 0 0 10px; }
-h2{ font-size: clamp(20px,2.8vw,26px); margin: 0 0 8px; color: var(--muted); }
-
-/* Knappar */
-button,.btn{
-  appearance: none;
-  border:1px solid var(--line);
-  border-radius: 12px;
-  padding: 12px 16px;
-  font-weight: 800;
-  cursor: pointer;
-  color: white;
-  background: linear-gradient(90deg, var(--btn1), var(--btn2));
-  box-shadow: 0 8px 20px rgba(167,139,250,.25);
-  transition: transform .15s, filter .15s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+/* ===== Headings ===== */
+h1,h2,h3{
+  font-family: Poppins, Inter, system-ui, sans-serif;
+  letter-spacing:.01em; margin:0 0 10px;
 }
-button:hover,.btn:hover{ filter: brightness(1.05); transform: translateY(-1px); }
-button.secondary{
-  background: white; color: var(--ink);
-  border-color: var(--ring);
-}
+h1{ font-size: clamp(28px,3.4vw,40px); font-weight:900 }
+h2{ font-size: clamp(20px,2.6vw,26px); font-weight:700; color: var(--muted) }
 
-/* === FORMULÄR === */
+/* ===== Form ===== */
 form.form{
   display:flex; flex-direction:column; gap:14px;
-  max-width: 420px; width: 100%;
+  max-width: 440px; width:100%;
   margin: 0 auto; text-align:left;
 }
-.form .field{ display:flex; flex-direction:column; gap:6px; }
-label{ font-weight: 700; color: var(--ink); }
+.form .field{ display:flex; flex-direction:column; gap:6px }
+label{ font-weight:700; color: var(--ink) }
+
 input{
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background:#fff;
+  width:100%; padding:12px 14px;
   color: var(--ink);
-  font-size: 16px;
-  box-shadow: inset 0 1px 0 rgba(0,0,0,.02);
+  background: #0f111a;
+  border:1px solid var(--line);
+  border-radius: var(--r-md);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.02);
+  font-size:16px;
 }
+input::placeholder{ color: color-mix(in oklab, var(--ink), transparent 45%) }
 input:focus{
-  outline: none;
-  border-color: var(--ring);
-  box-shadow: 0 0 0 4px rgba(196,181,253,.25);
+  outline:none;
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(255,77,166,.18);
 }
 
-/* === AUTH-KNAPPAR (Registrera överst, Logga in direkt under) === */
+/* ===== Buttons ===== */
+button,.btn{
+  appearance:none;
+  border:1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 12px 16px;
+  font-weight: 800; letter-spacing:.02em;
+  cursor:pointer;
+  color:#111; background: #f7f7fb; /* ljus knapp på mörk yta */
+  box-shadow: none;
+  transition: transform .08s ease, filter .12s ease, border-color .12s ease, background .12s ease;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+button:hover,.btn:hover{ transform: translateY(-1px); filter: brightness(1.02) }
+
+/* Primär CTA i Kuromi-rosa, tydlig men stilren */
+.btn-primary, .btn-register{
+  background: #1a0f18;            /* mörk rosa-baskänsla */
+  color: #ffd7ec;                  /* ljus text */
+  border-color: #2b0f22;
+  box-shadow: inset 0 0 0 1px rgba(255,77,166,.25);
+}
+.btn-primary:hover, .btn-register:hover{
+  background: #20111c; border-color:#3a1530;
+}
+
+/* Sekundär/ghost – sober ram */
+.btn-ghost, button.secondary{
+  background: #0f111a; color: var(--ink);
+  border-color: var(--line); box-shadow:none;
+}
+
+/* ===== Auth-knappar – staplade & full bredd ===== */
 form.form .actions{
-  display:flex;
-  flex-direction: column !important; /* tvinga vertikalt */
-  gap:12px;
-  margin-top:12px;
-  align-items: stretch; /* samma bredd */
+  display:flex !important; flex-direction: column !important;
+  gap:12px !important; align-items:stretch !important;
+  width:100% !important; margin-top:12px;
 }
-form.form .actions button{
-  width:100% !important;   /* full bredd */
-  max-width:100%;
-  justify-content:center;
+form.form .actions > *{
+  display:block !important; width:100% !important; max-width:100% !important;
+  margin:0 !important; align-self:stretch !important; box-sizing:border-box !important;
 }
+form.form .actions .btn-register{ order:1 }
+form.form .actions .btn-login{ order:2 }
 
-/* (valfritt) kontrollera ordning om du har klassnamn */
-form.form .actions .btn-register{ order:1; }
-form.form .actions .btn-login{ order:2; }
+/* Textlänk längst ned */
+.auth-alt{
+  order:3;
+  background: transparent; border:none;
+  color: var(--muted);
+  font-weight:700; padding: 6px 0; text-align:center;
+}
+.auth-alt:hover{ color:#fff; text-decoration: underline; text-underline-offset:3px }
 
-/* Fallback om någon råkar sätta .row */
-form.form .actions.row{ flex-direction: column !important; }
-
-/* Avatar-väljare */
+/* ===== Avatar-grid ===== */
 .avatar-grid{
-  display:flex; flex-wrap: wrap; gap:12px; justify-content:center; margin-top:6px;
+  display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:6px;
 }
 .avatar-grid img{
   width:64px; height:64px; border-radius:50%;
-  background:#fff; border:2px solid var(--line); cursor:pointer;
-  transition: transform .12s, box-shadow .12s, border-color .12s;
+  object-fit:cover; cursor:pointer;
+  background:#0f111a; border:2px solid var(--line);
+  transition: transform .12s, box-shadow .12s, border-color .12s, background .12s;
 }
-.avatar-grid img:hover{ transform: translateY(-1px); box-shadow: 0 10px 18px rgba(31,41,55,.12) }
-.avatar-grid img.selected{ border-color: var(--ring); box-shadow: 0 0 0 3px rgba(196,181,253,.45) }
-
-/* UserInfo */
-.userinfo{ display:flex; align-items:center; gap:10px; }
-.userinfo .avatar{ width:32px; height:32px; border-radius:50%; border:2px solid var(--ring); }
-
-/* === CHATT === */
-.chat{ max-width: 740px; margin: 0 auto; }
-.chat h1{ margin-bottom: 8px }
-
-/* listan med meddelanden */
-.chat-list{
-  display:flex;
-  flex-direction: column;
-  align-items: flex-start; /* standard: vänster */
-  gap:12px;
-  margin:12px 0 20px;
+.avatar-grid img:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,.35);
+}
+.avatar-grid img.selected{
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(255,77,166,.25);
+  background:#150d14;
 }
 
-/* varje meddelande (andra) */
+/* ===== Chat (mörka bubblor, sobert) ===== */
+.chat{ max-width:740px; margin:0 auto }
+.chat h1{ margin-bottom:8px }
+.chat-list{ display:flex; flex-direction:column; align-items:flex-start; gap:12px; margin:12px 0 20px }
+
 .chat-item{
   max-width:70%;
-  background:#f3f4f6;     /* neutral ljusgrå */
-  color:#111827;
-  padding:10px 12px;
-  border-radius:14px 14px 14px 6px; /* vänster-svans */
-  position:relative;
-  margin-left:0;
-  margin-right:auto;       /* håll vänster */
-  box-shadow:0 1px 6px rgba(0,0,0,0.06);
-}
-
-/* MINA meddelanden → till höger */
-.chat-item.me{
-  align-self:flex-end;     /* tryck bubblan till höger */
-  margin-left:auto;
-  margin-right:0 !important; /* undvik mitten */
-  background:#ede9fe;        /* lila-100 */
-  color:#111827;
-  border-radius:14px 14px 6px 14px; /* höger-svans */
-  box-shadow:0 1px 6px rgba(0,0,0,0.06);
-}
-
-/* meta / tid / namn */
-.chat-item .meta{
-  font-size:12px;
-  opacity:.7;
-  margin-bottom:4px;
-  color:#6b7280;
-}
-
-/* eventuellt avatar i bubblan */
-.chat-item img{
-  width:32px; height:32px; border-radius:50%;
-  object-fit:cover;
-  margin-right:8px;
-}
-
-/* radera-knapp i bubblan */
-.delete-btn{
-  position:absolute;
-  top:8px; right:8px;
-  background:transparent;
-  border:none;
-  color:#ef4444;
-  font-size:16px;
-  cursor:pointer;
-  padding:4px;
-  border-radius:50%;
-  transition: background .2s ease, color .2s ease;
-}
-.delete-btn:hover{
-  background:#ef4444;
-  color:white;
-}
-
-/* inputområdet i chatten */
-.message-input{
-  display:grid;
-  grid-template-columns: 1fr auto;
-  gap:10px;
-}
-.message-input input{
-  padding:12px 14px;
-  border-radius:12px;
+  background: #0f111a; color: var(--ink);
   border:1px solid var(--line);
-  background:#fff;
-  color:var(--ink);
-  font-size:16px;
+  border-radius:14px; padding:10px 12px;
+  box-shadow: none;
 }
-.message-input button{ padding:12px 18px; }
+.chat-item.me{
+  align-self:flex-end; margin-left:auto; margin-right:0 !important;
+  background: #121528;
+  border-color: #1d2140;
+  border-radius:14px 14px 6px 14px;
+}
+.chat-item .meta{ font-size:12px; opacity:.78; margin-bottom:4px; color: var(--muted) }
 
-/* Hjälpklasser */
+.delete-btn{
+  position:absolute; top:8px; right:8px;
+  background:transparent; border:none; color:#ff6b6b;
+  font-size:16px; cursor:pointer; padding:4px; border-radius:50%;
+  transition: background .2s, color .2s;
+}
+.delete-btn:hover{ background:#ff6b6b; color:#0d0d16 }
+
+.message-input{ display:grid; grid-template-columns: 1fr auto; gap:10px }
+.message-input input{
+  padding:12px 14px; border-radius:12px;
+  border:1px solid var(--line); background:#0f111a; color: var(--ink);
+}
+.message-input button{ padding:12px 18px }
+
+/* Helpers */
 .center{text-align:center}
 .mt-8{margin-top:8px} .mt-12{margin-top:12px} .mt-16{margin-top:16px} .mt-24{margin-top:24px}
 .hidden{ display:none }
 
-/* === HÅRDSÄKER FIX: AUTH-KNAPPAR STAPLAS OCH FYLLER BREDD === */
+/* Error text */
+.error{ color:#ff6b6b; font-weight:700; margin-top:8px }
 
-/* 1) Se till att själva actions-containern beter sig */
-form.form .actions {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 12px !important;
-  margin-top: 12px;
-  align-items: stretch !important;   /* barn fyller bredd */
-  justify-content: flex-start !important;
-  width: 100% !important;
-  text-align: initial !important;     /* neutralisera text-align på förälder */
+/* Centrera auth-rubriker */
+.auth-title {
+  text-align: center;
+  font-family: Poppins, Inter, system-ui, sans-serif;
+  font-weight: 900;
+  letter-spacing: .02em;
+  margin-bottom: 18px;
+  color: var(--ink);
 }
 
-/* 2) Allt inuti actions blir block och 100% bredd */
-form.form .actions > * {
-  display: block !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box;
-  margin: 0 !important;              /* ta bort ev. auto-margins */
-  align-self: stretch !important;
+/* === Chat input & send button fix === */
+.message-input {
+  display: grid;
+  grid-template-columns: 1fr auto; /* input tar allt, knapp bara så stor den behöver */
+  gap: 10px;
+  align-items: center; /* vertikal centrering */
 }
 
-/* 3) Gäller både riktiga <button> och ev. <a class="btn"> */
-form.form .actions button,
-form.form .actions .btn,
-form.form .actions a.btn {
-  display: block !important;
-  width: 100% !important;
-  justify-content: center !important;
+.message-input input {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #0f111a;
+  color: var(--ink);
+  font-size: 15px;
+  height: 44px; /* fixad höjd */
 }
 
-/* 4) Om någon råkat lägga "row" eller grid – tvinga kolumn */
-form.form .actions.row,
-form.form .actions[style*="grid"],
-form.form .actions[style*="inline"] {
-  display: flex !important;
-  flex-direction: column !important;
+.message-input button {
+  padding: 0 18px; /* jämnare padding, ingen extra top/bottom */
+  height: 44px;   /* samma höjd som input */
+  border-radius: 12px;
+  font-weight: 700;
 }
 
-/* 5) Ordningen: Registrera överst, Logga in under (om klasser finns) */
-form.form .actions .btn-register { order: 1; }
-form.form .actions .btn-login    { order: 2; }
+/* === Chat form: input + send aligned === */
+.chat-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;        /* vertikalt centrerat */
+  margin-top: 10px;
+}
+
+.chat-form input,
+.chat-form button {
+  height: 48px;               /* samma höjd */
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+.chat-form input {
+  flex: 1;                    /* tar all bredd */
+  padding: 0 14px;            /* inga extra top/bottom */
+  border: 1px solid var(--line);
+  background: #0f111a;
+  color: var(--ink);
+}
+
+.chat-form button {
+  padding: 0 20px;            /* bara sidopadding */
+  font-weight: 700;
+  border: none;
+  background: var(--pink);
+  color: #fff;
+  cursor: pointer;
+  transition: background .2s ease, transform .08s ease;
+}
+
+.chat-form button:hover {
+  background: var(--pink-600);
+  transform: translateY(-1px);
+}
+
+.auth-title {
+  text-align: center;
+  font-family: Poppins, Inter, sans-serif;
+  font-weight: 900;
+  font-size: clamp(28px, 3.6vw, 40px);
+  letter-spacing: .04em;
+  margin-bottom: 20px;
+  color: var(--ink);
+  text-shadow: 0 0 10px rgba(255,77,166,.6);
+}

@@ -22,7 +22,6 @@ export default function Register() {
     e.preventDefault();
     setError(null);
 
-    // Klientvalidering
     if (!username.trim() || username.length < 3) {
       setError("Användarnamnet måste vara minst 3 tecken långt.");
       return;
@@ -49,7 +48,9 @@ export default function Register() {
 
   return (
     <div className="container">
-      <h1>Registrera</h1>
+    <h1 className="auth-title">Registrera dig</h1>
+
+
       <form className="form" onSubmit={handleSubmit}>
         <div className="field">
           <label>Användarnamn</label>
@@ -57,8 +58,10 @@ export default function Register() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
+            placeholder="Ditt användarnamn"
           />
         </div>
+
         <div className="field">
           <label>Email</label>
           <input
@@ -66,8 +69,10 @@ export default function Register() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            placeholder="namn@exempel.se"
           />
         </div>
+
         <div className="field">
           <label>Lösenord</label>
           <input
@@ -75,8 +80,10 @@ export default function Register() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            placeholder="Minst 6 tecken"
           />
         </div>
+
         <div className="field">
           <label>Välj en avatar</label>
           <div className="avatar-grid">
@@ -87,23 +94,28 @@ export default function Register() {
                 alt={`Avatar ${index + 1}`}
                 className={avatar === url ? "selected" : ""}
                 onClick={() => setAvatar(url)}
-                style={{
-                  cursor: "pointer",
-                  border: avatar === url ? "2px solid #4f5bd5" : "2px solid transparent",
-                  borderRadius: "50%",
-                  width: "64px",
-                  height: "64px",
-                }}
               />
             ))}
           </div>
         </div>
-        <button type="submit">Registrera</button>
+
+        
+        <div className="actions">
+          <button type="submit" className="btn-register btn-primary">
+            Registrera
+          </button>
+
+          <button
+            type="button"
+            className="auth-alt"
+            onClick={() => navigate("/login")}
+          >
+            Har du redan ett konto? Logga in här
+          </button>
+        </div>
+
         {error && <p className="error">{error}</p>}
       </form>
-      <button className="link" onClick={() => navigate("/login")}>
-        Har du redan ett konto? Logga in här.
-      </button>
     </div>
   );
 }
