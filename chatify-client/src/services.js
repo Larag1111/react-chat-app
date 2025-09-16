@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL || "https://chatify-api.up.railway.app";
 
-// HANTERAR FEL VID FETCH OCH LOGGAR FELMEDDELANDE I CONSOLE
+
 async function handleError(res, defaultMessage) {
   let errMessage = `${defaultMessage} (Status ${res.status})`;
   try {
@@ -15,13 +15,13 @@ async function handleError(res, defaultMessage) {
   throw new Error(errMessage);
 }
 
-// HANTERAR LYCKAD FETCH OCH LOGGAR MEDDELANDE I CONSOLE
+
 async function handleSuccess(res, successMessage) {
   console.log(`${successMessage} (Status ${res.status} ${res.statusText})`);
   return await res.json();
 }
 
-// GENERAR CSRF-TOKEN OCH LAGRAR I SESSIONSTORAGE
+
 export async function generateCsrf() {
   const res = await fetch(`${API_URL}/csrf`, {
     method: "PATCH",
@@ -40,7 +40,7 @@ export async function generateCsrf() {
   await handleError(res, "Security check failed. Please try again or refresh the page.");
 }
 
-// REGISTRERAR ANVÄNDARE
+
 export async function registerUser({ username, password, email, avatar }) {
   const csrfToken = sessionStorage.getItem("csrfToken") || (await generateCsrf());
   const res = await fetch(`${API_URL}/auth/register`, {
@@ -52,7 +52,7 @@ export async function registerUser({ username, password, email, avatar }) {
       password: password.trim(),
       email: email.trim(),
       avatar: avatar || null,
-      csrfToken, // Skicka CSRF-token
+      csrfToken, 
     }),
   });
   if (res.ok) {
@@ -61,7 +61,7 @@ export async function registerUser({ username, password, email, avatar }) {
   await handleError(res, "Registration failed. Please check your input.");
 }
 
-// LOGGAR IN ANVÄNDARE
+
 export async function loginUser({ username, password }) {
   const csrfToken = sessionStorage.getItem("csrfToken") || (await generateCsrf());
   const res = await fetch(`${API_URL}/auth/token`, {
@@ -82,7 +82,7 @@ export async function loginUser({ username, password }) {
   await handleError(res, "Login failed. Please check your username and password.");
 }
 
-// Hämta meddelanden
+
 export async function getMessages() {
   const jwtToken = sessionStorage.getItem("jwtToken");
   if (!jwtToken) throw new Error("Ingen JWT-token hittades.");
@@ -101,7 +101,7 @@ export async function getMessages() {
   return res.json();
 }
 
-// Skapa meddelande
+
 export async function createMessage({ text }) {
   const jwtToken = sessionStorage.getItem("jwtToken");
   if (!jwtToken) throw new Error("Ingen JWT-token hittades.");
@@ -124,7 +124,7 @@ export async function createMessage({ text }) {
   return res.json();
 }
 
-// DELETE
+
 export async function deleteMessage(id) {
   const jwtToken = sessionStorage.getItem("jwtToken");
   if (!jwtToken) throw new Error("Ingen JWT-token hittades.");
@@ -146,14 +146,14 @@ export async function deleteMessage(id) {
   return res.json();
 }
 
-// LOGGAR UT ANVÄNDARE
+
 export function logoutUser() {
   try {
-    // Ta bort CSRF-token och JWT-token från sessionStorage
+    
     sessionStorage.removeItem("csrfToken");
     sessionStorage.removeItem("jwtToken");
 
-    // Ta bort CSRF-token och JWT-token från localStorage (om de finns)
+    
     localStorage.removeItem("csrfToken");
     localStorage.removeItem("jwtToken");
     localStorage.removeItem("user");

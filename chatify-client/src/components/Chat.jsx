@@ -1,4 +1,4 @@
-// src/pages/Chat.jsx
+
 import { useState, useEffect } from "react";
 import { getMessages, createMessage, deleteMessage } from "../services.js";
 import { useNavigate } from "react-router-dom";

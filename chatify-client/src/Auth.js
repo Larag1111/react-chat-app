@@ -1,7 +1,6 @@
-// src/utils/Auth.js
 const API_URL = (import.meta.env.VITE_API_URL || "https://chatify-api.up.railway.app").replace(/\/+$/, "");
 
-// 1) Hämta CSRF-token
+
 export async function fetchCsrfToken() {
   const res = await fetch(`${API_URL}/csrf`, {
     method: "PATCH",
@@ -18,12 +17,12 @@ export async function fetchCsrfToken() {
   const csrf = data?.csrfToken;
   if (!csrf) throw new Error("Servern skickade ingen csrfToken");
   
-  // Lagra CSRF-token i sessionStorage
+ 
   sessionStorage.setItem("csrfToken", csrf);
   return csrf;
 }
 
-// 2) Registrera
+
 export async function registerUser({ username, email, password, avatar }) {
   const token = await fetchCsrfToken();
   const res = await fetch(`${API_URL}/auth/register`, {
@@ -37,7 +36,7 @@ export async function registerUser({ username, email, password, avatar }) {
     throw new Error(data?.message || data?.error || `Registrering misslyckades (status ${res.status})`);
   }
   
-  // Lagra CSRF-token och JWT i sessionStorage
+  
   sessionStorage.setItem("csrfToken", token);
   if (data?.token) {
     sessionStorage.setItem("jwtToken", data.token);
@@ -45,7 +44,7 @@ export async function registerUser({ username, email, password, avatar }) {
   return data;
 }
 
-// 3) Login
+
 export async function loginUser({ username, password }) {
   const token = await fetchCsrfToken();
   const res = await fetch(`${API_URL}/auth/token`, {
@@ -67,16 +66,16 @@ export async function loginUser({ username, password }) {
   if (data?.token) {
     sessionStorage.setItem("jwtToken", data.token);
   }
-  return data; // förväntas vara { token: "..." }
+  return data; 
 }
 
-// 4) Logga ut
+
 export function logoutUser() {
-  // Ta bort CSRF-token och JWT-token från sessionStorage
+
   sessionStorage.removeItem("csrfToken");
   sessionStorage.removeItem("jwtToken");
 
-  // Ta bort CSRF-token och JWT-token från localStorage (om de finns)
+
   localStorage.removeItem("csrfToken");
   localStorage.removeItem("jwtToken");
 
